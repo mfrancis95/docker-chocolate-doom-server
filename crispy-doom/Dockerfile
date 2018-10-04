@@ -1,15 +1,14 @@
-FROM ubuntu:latest
+FROM alpine:latest
 
-RUN apt-get update && \
-    apt-get install -y autoconf git libsdl2-dev libsdl2-mixer-dev libsdl2-net-dev pkg-config && \
+RUN echo 'http://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories && \
+    apk update && \
+    apk add autoconf automake build-base git sdl2-dev sdl2_mixer-dev sdl2_net-dev && \
     git clone https://github.com/fabiangreffrath/crispy-doom
 
 WORKDIR crispy-doom
 
-RUN ./autogen.sh && make && make install && useradd crispy-doom
-
-USER crispy-doom
+RUN ./autogen.sh && make
 
 EXPOSE 2342/udp
 
-ENTRYPOINT crispy-doom -dedicated -privateserver
+ENTRYPOINT src/crispy-doom -dedicated -privateserver
