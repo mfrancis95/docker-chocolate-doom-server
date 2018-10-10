@@ -1,14 +1,13 @@
-FROM alpine:latest
+FROM mfrancis95/chocolate-doom-build
 
-RUN echo 'http://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories && \
-    apk update && \
-    apk add autoconf automake build-base git sdl2-dev sdl2_mixer-dev sdl2_net-dev && \
-    git clone https://github.com/chocolate-doom/chocolate-doom
+RUN git clone https://github.com/chocolate-doom/chocolate-doom
 
 WORKDIR chocolate-doom
 
-RUN git reset --hard 8777b99 && ./autogen.sh && make
+RUN git reset --hard 8777b99 && ./autogen.sh && make install
 
-EXPOSE 2342/udp
+FROM mfrancis95/chocolate-doom-base
 
-ENTRYPOINT src/chocolate-doom -dedicated -privateserver
+COPY --from=0 /usr/local/bin/chocolate-doom /usr/local/bin/chocolate-doom
+
+ENTRYPOINT chocolate-doom -dedicated -privateserver
