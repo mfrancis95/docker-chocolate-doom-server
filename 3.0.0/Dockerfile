@@ -1,10 +1,10 @@
 FROM mfrancis95/chocolate-doom-build
 
-RUN git clone https://github.com/chocolate-doom/chocolate-doom
+RUN git clone -b chocolate-doom-3.0.0 https://github.com/chocolate-doom/chocolate-doom
 
 WORKDIR chocolate-doom
 
-RUN git reset --hard 8777b99 && ./autogen.sh && make install
+RUN ./autogen.sh && make install
 
 FROM mfrancis95/chocolate-doom-base
 
